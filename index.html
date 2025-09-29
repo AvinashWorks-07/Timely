@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timely</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="calendar.css">
+    <link rel="stylesheet" href="events.css">
+    <link rel="stylesheet" href="todo.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Timely
+                </h1>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="current-date" id="currentDate"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <div class="nav-container">
+                <button class="nav-item active" data-module="calendar">
+                    <i class="fas fa-calendar"></i>
+                    <span>Calendar</span>
+                </button>
+                <button class="nav-item" data-module="events">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Events</span>
+                </button>
+                <button class="nav-item" data-module="todo">
+                    <i class="fas fa-tasks"></i>
+                    <span>To-Do</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Calendar Module -->
+            <section class="module calendar-module active" id="calendarModule">
+                <div class="module-header">
+                    <h2>Calendar</h2>
+                    <div class="calendar-controls">
+                        <div class="view-selector">
+                            <button class="view-btn active" data-view="month">Month</button>
+                            <button class="view-btn" data-view="week">Week</button>
+                            <button class="view-btn" data-view="day">Day</button>
+                        </div>
+                        <div class="calendar-navigation">
+                            <button class="nav-btn" id="prevPeriod">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="current-period" id="currentPeriod"></span>
+                            <button class="nav-btn" id="nextPeriod">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+            </section>
+
+            <!-- Events Module -->
+            <section class="module events-module" id="eventsModule">
+                <div class="module-header">
+                    <h2>Events</h2>
+                    <button class="add-btn" id="addEventBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Event
+                    </button>
+                </div>
+                <div class="events-container">
+                    <div class="events-tabs">
+                        <button class="tab-btn active" data-tab="upcoming">Upcoming</button>
+                        <button class="tab-btn" data-tab="attended">Attended</button>
+                    </div>
+                    <div class="events-content">
+                        <div class="events-list" id="upcomingEvents"></div>
+                        <div class="events-list hidden" id="attendedEvents"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- To-Do Module -->
+            <section class="module todo-module" id="todoModule">
+                <div class="module-header">
+                    <h2>To-Do List</h2>
+                    <button class="add-btn" id="addTaskBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Task
+                    </button>
+                </div>
+                <div class="todo-container">
+                    <div class="todo-filters">
+                        <select class="filter-select" id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <select class="filter-select" id="priorityFilter">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="tasks-list" id="tasksList"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <!-- Event Modal -->
+        <div class="modal" id="eventModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="eventModalTitle">Add Event</h3>
+                    <button class="close-btn" id="closeEventModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form class="modal-form" id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Title</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventDate">Date</label>
+                            <input type="date" id="eventDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventTime">Time</label>
+                            <input type="time" id="eventTime" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventType">Type</label>
+                            <select id="eventType" required>
+                                <option value="custom">Custom</option>
+                                <option value="work">Work</option>
+                                <option value="meeting">Meeting</option>
+                                <option value="birthday">Birthday</option>
+                                <option value="festival">Festival</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reminderTime">Reminder (minutes before)</label>
+                            <select id="reminderTime">
+                                <option value="10">10 minutes</option>
+                                <option value="15">15 minutes</option>
+                                <option value="30">30 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelEvent">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div class="modal" id="taskModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="taskModalTitle">Add Task</h3>
+                    <button class="close-btn" id="closeTaskModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form class="modal-form" id="taskForm">
+                    <div class="form-group">
+                        <label for="taskTitle">Title</label>
+                        <input type="text" id="taskTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription">Description</label>
+                        <textarea id="taskDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskCategory">Category</label>
+                            <select id="taskCategory" required>
+                                <option value="personal">Personal</option>
+                                <option value="work">Work</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority">Priority</label>
+                            <select id="taskPriority" required>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDueDate">Due Date (optional)</label>
+                        <input type="date" id="taskDueDate">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelTask">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notification Container -->
+        <div class="notifications" id="notifications"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="storage.js"></script>
+    <script src="notifications.js"></script>
+    <script src="events.js"></script>
+    <script src="calendar.js"></script>
+    <script src="todo.js"></script>
+    <script src="app.js"></script>
+    <script src="models/Task.js"></script>
+    <script src="Database Collection/db.js"></script>
+    <script src="Database Collection/server.js"></script>
+
+</body>
+</html>
+
